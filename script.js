@@ -22,19 +22,19 @@
 
 /*
 1. Initalize Game 
-a. Display board
-b. Display instructions
-C. Display whose turn it is 
-d. set up click handler for column
+    a. Display board
+    b. Display instructions
+    C. Display whose turn it is 
+    d. set up click handler for column
 2.Take player Input
-a.Determine which colum is clicked 
-b. Determine which color is dropped 
-c. after drop, switch active player 
+    a.Determine which colum is clicked 
+    b. Determine which color is dropped 
+    c. after drop, switch active player 
 3.Check of Endgame Conditions
-a. See if there is a 4 in a row 
-b. See if game is tie 
-c. Show endgame messge 
-d. allow restart 
+    a. See if there is a 4 in a row 
+    b. See if game is tie 
+    c. Show endgame messge 
+    d. allow restart 
 */
 
 let boardModel = [
@@ -90,9 +90,13 @@ const setUpColumnClickHandler = function () {
     }
 }
 
+
+
 const initalizeGame = function () {
     displayBoard(boardModel)
     displayInstructions()
     displayActivePlayer()
     setUpColumnClickHandler()
 }
+
+initalizeGame()
