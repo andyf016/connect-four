@@ -19,3 +19,32 @@
         -2 variables, "or" command to allow only 1 color to activate win condition   
 
     */ 
+
+    /*
+1. Initalize Game 
+    a. Display board
+    b. Display instructions
+    C. Display whose turn it is 
+    d. set up click handler for column
+2.Take player Input
+    a.Determine which colum is clicked 
+    b. Determine which color is dropped 
+    c. after drop, switch active player 
+3.Check of Endgame Conditions
+    a. See if there is a 4 in a row 
+    b. See if game is tie 
+    c. Show endgame messge 
+    d. allow restart 
+    */
+
+    const displayBoard = function (){}
+    const displayInstructions = function(){}
+    const displayActivePlayer = function(){}
+    const setUpColumnClickHandler = function(){}
+
+    const initalizeGame = function () {
+        displayBoard()
+        displayInstructions()
+        displayActivePlayer()
+        setUpColumnClickHandler()
+    }
