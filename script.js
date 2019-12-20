@@ -1,102 +1,143 @@
-/*
-1. Display connect 4 grid on screen 
-    a. click handlers
-    b. Beautiful CSS
-        -flex boxes
-        -colors
-        -grid
-    c. No invalid moves 
-        -display ID row div
-        -click counter 
-        -once a column is full, cant add more disks 
-2. Turn based 
-    a. Keep track of disck location
-        -Cycles colors based on input counter
-    b. Properly cycle between colors 
-3. Win condition
-    a. 1 player has 4 colors in a row or diagnaly 
-    b. Program recognizes win
-        -2 variables, "or" command to allow only 1 color to activate win condition   
+let gameActive = false;
+let activePlayer = 0;
+let gameBoard = [];
+let playerColor = [];
+playerColor[1] = "Blue";
+playerColor[2] = "Red";
+let dropCounts = 0 
 
-    */
-
-/*
-1. Initalize Game 
-    a. Display board
-    b. Display instructions
-    C. Display whose turn it is 
-    d. set up click handler for column
-2.Take player Input
-    a.Determine which colum is clicked 
-    b. Determine which color is dropped 
-    c. after drop, switch active player 
-3.Check of Endgame Conditions
-    a. See if there is a 4 in a row 
-    b. See if game is tie 
-    c. Show endgame messge 
-    d. allow restart 
-*/
-
-let boardModel = [
-    ['', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', ''],
-]
-
-const displayBoard = function (board) {
-
+let beginGame = function () {
+    if (gameActive == true) return false;
+    gameActive = true;
+    document.getElementById("beginGame").disabled = true;
+    for (row = 0; row <= 5; row++) {
+        gameBoard[row] = [];
+        for (col = 0; col <= 6; col++) {
+            gameBoard[row][col] = 0;
+        } 
+    }
+    let buttons = document.getElementsByClassName("drop");
+        for (i = 0; i<7; i++){
+            buttons[i].disabled = false;
+        }
+    
+    drawBoard();
+    activePlayer = 1;
+    setUpTurn();
 }
 
-const dislayMessage = function (msg) {
 
+let drawBoard = function () {                       //
+    checkForWin();
+    for (col = 0; col <= 6; col++) {
+        for (row = 0; row <= 5; row++) {
+            document.getElementById('square_' + row + '_' + col).innerHTML = "<span class = 'piece player" + gameBoard[row][col] + "'></span>";
+        }
+    }
 }
 
-const displayInstructions = function () {
-    displayMessage("here is how to play...")
+let checkForWin = function () { 
+    for (i = 1; i <= 2; i++) {                       //Check for left to right win condition
+        for (col = 0; col <= 3; col++) {
+            for (row = 0; row <= 5; row++) {
+                if (gameBoard[row][col] == i) {
+                    if ((gameBoard[row][col + 1] == i) && (gameBoard[row][col + 2] == i) && (gameBoard[row][col + 3] == i)) {
+                        endGame(i);console.log("leftRight")
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    for (i = 1; i <= 2; i++) {                       //Check for top to bottom win condition
+        for (col = 0; col <= 6; col++) {
+            for (row = 0; row <= 2; row++) {
+                if (gameBoard[row][col] == i) {
+                    if ((gameBoard[row + 1][col] == i) && (gameBoard[row + 2][col] == i) && (gameBoard[row + 3][col] == i)) {
+                        endGame(i); console.log("vert")
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    for (i = 1; i <= 2; i++) {                       //Check for diagonal down win condition
+        for (col = 0; col <= 3; col++) {
+            for (row = 0; row <= 2; row++) {
+                if (gameBoard[row][col] == i) {
+                    if ((gameBoard[row + 1][col + 1] == i) && (gameBoard[row + 2][col + 2] == i) && (gameBoard[row + 3][col + 3] == i)) {
+                        endGame(i); console.log("diag")
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    for (i = 1; i <= 2; i++) {                   //Check for diagonal up win condition
+        for (col = 0; col <= 3; col++) {
+            for (row = 3; row <= 5; row++) {
+                if (gameBoard[row][col] == i) {
+                    if ((gameBoard[row - 1][col + 1] == i) && (gameBoard[row - 2][row + 2] == i) && (gameBoard[row - 3][row + 3] == i)) {
+                        endGame(i);console.log("diagUp")
+                        return true;
+                    }
+                }
+            }
+        }
+    }
 }
 
-const displayWinningMessage = function () {
-    displayMessage(`${winningPlayer} has won!`)
+let endGame = function(winningPlayer) {        //End Game function
+    console.log("end")
+    dropCounts = -1
+    document.getElementById("game_table").disabled = true;
+    gameActive = false;
+    document.getElementById('game_info').innerHTML = "Crushing Victory! Player: " + winningPlayer;
+    let buttons = document.getElementsByClassName("drop");
+        for (i = 0; i<7; i++){
+            buttons[i].disabled = true;
+        }
+        document.getElementById("beginGame").disabled = false;
+    
 }
 
-const displayTieMessage = function () {
-    displayMessage("tie game")
+let setUpTurn = function () {  
+    dropCounts++
+    console.log(dropCounts)
+    if (dropCounts === 43){
+        endGame("tie!")
+    }             //Set turn for new player
+    console.log("setUp")
+    if (gameActive) {
+        document.getElementById('game_info').innerHTML = "Current Player: Player " + activePlayer + " <span class='player" + activePlayer + "'>" + playerColor[activePlayer] + "</span>";
+        
+    }
 }
 
-const columnClickHandler = function (evt) {
+let drop = function (col) {                 //Add peice to the lowest possible column 
+    
+    
+    for (row = 5; row >= 0; row--) {
+        if (gameBoard[row][col] == 0) {
+            gameBoard[row][col] = activePlayer;
+            drawBoard();
+            if (activePlayer == 1) {
+                activePlayer = 2;
+            } else {
+                activePlayer = 1;
+            }
+            setUpTurn();
 
-}
-
-const displayActivePlayer = function () {
-
-}
-
-const determineGameWinner = function (board) {
-    return ''  // TODO: implement for real
-}
-
-const setUpColumnClickHandler = function () {
-    const columnThatWasClicked = evt.target
-    dropDiskIntoColumn(columnThatWasClicked)
-    if (gameIsWon(boardModel)) {
-        displayWinningMessage()
-    } else if (gameIsATie(boardModel)) {
-        displayTieMessage()
-    } else {
-        switchToNextPlayer()
+            return true;
+        }
     }
 }
 
 
 
-const initalizeGame = function () {
-    displayBoard(boardModel)
-    displayInstructions()
-    displayActivePlayer()
-    setUpColumnClickHandler()
-}
 
-initalizeGame()
+
+beginGame();
+
+
